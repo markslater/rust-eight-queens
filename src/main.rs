@@ -10,8 +10,13 @@ fn main() {
                 if let Ok(board) = board.set(second) {
                     for third in second..64 {
                         if let Ok(board) = board.set(third) {
-                            println!("{}, {}, {}", first, second, third);
-                            board.output();
+                            for fourth in third..64 {
+                                if let Ok(board) = board.set(fourth) {
+                                    println!("{}, {}, {}, {}", first, second, third, fourth);
+                                    board.output();
+                                    break;
+                                }
+                            }
                             break;
                         }
                     }
