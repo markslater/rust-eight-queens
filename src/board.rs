@@ -31,6 +31,15 @@ impl Board {
         }
     }
 
+    pub fn place_next(&self, start_at: usize) -> Result<(Board, usize), ()> {
+        for i in start_at..64 {
+            if let Ok(board) = self.set(i) {
+                return Ok((board, i));
+            }
+        }
+        Err(())
+    }
+
     pub fn output(&self) {
         for y in 0..8 {
             print!("{}|", y);
