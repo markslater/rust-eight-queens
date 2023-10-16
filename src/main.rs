@@ -5,7 +5,7 @@ mod board;
 fn main() {
     let mut board = Board::new();
     let mut place = 0;
-    for queen in 0..4 {
+    for queen in 0..5 {
         if let Ok(t) = board.place_next(place){
             board = t.0;
             place = t.1;
