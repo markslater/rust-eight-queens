@@ -13,19 +13,19 @@ impl Board {
         if self.squares[square] { // TODO should we improve error when index is out of bounds?
             Err(())
         } else {
-            let mut new_squares = self.squares;
+            let mut squares = self.squares;
             for i in square..64 {
                 if (i % 8 == square % 8)
                     || (i / 8 == square / 8)
                     || ((i - square) % 9 == 0 && i % 8 >= square % 8)
                     || ((i - square) % 7 == 0 && i % 8 <= square % 8)
                 {
-                    new_squares[i] = true;
+                    squares[i] = true;
                 }
             }
             Ok(
                 Board {
-                    squares: new_squares
+                    squares
                 }
             )
         }
