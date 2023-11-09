@@ -64,3 +64,14 @@ impl Board {
         println!();
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::board::Board;
+
+    #[test]
+    fn place_next_rejects_placement_on_same_square_twice() {
+        let (setup, _) = Board::new().place_next(63).unwrap();
+        assert!(setup.place_next(63).is_err())
+    }
+}
