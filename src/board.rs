@@ -9,7 +9,7 @@ impl Board {
         }
     }
 
-    pub fn set(&self, square: usize) -> Result<Board, ()> { // TODO should we use a smaller argument?  Does it matter?
+    fn set(&self, square: usize) -> Result<Board, ()> { // TODO should we use a smaller argument?  Does it matter?
         if self.squares[square] { // TODO should we improve error when index is out of bounds?
             Err(())
         } else {
