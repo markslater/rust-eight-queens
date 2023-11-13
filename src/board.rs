@@ -9,7 +9,7 @@ impl Board {
         }
     }
 
-    fn place_queens(&self, start_at: usize, number_to_place: u32) -> impl Iterator<Item = Vec<usize>> {
+    pub fn place_queens(&self, start_at: usize, number_to_place: u32) -> impl Iterator<Item = Vec<usize>> {
         match number_to_place {
             0 => vec![vec![1usize; 0]; 1],
             _ => (start_at..64)
