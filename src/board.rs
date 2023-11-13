@@ -12,7 +12,7 @@ impl Board {
         }
     }
 
-    pub fn place_queens(&self, start_at: usize, number_to_place: u32) -> impl Iterator<Item = Vec<usize>> {
+    pub fn place_queens(&self, start_at: usize, number_to_place: u32) -> impl Iterator<Item=Vec<usize>> {
         match number_to_place {
             0 => vec![vec![1usize; 0]; 1],
             _ => (start_at..64)
@@ -50,27 +50,22 @@ impl Board {
 impl fmt::Display for Board {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         for y in 0..8 {
-            write!(f, "{}|", y)?;
-            for x in 0..8 {
-                if self.squares[(y * 8) + x] {
-                    write!(f, " X ")?;
-                } else {
-                    write!(f, "   ")?;
-                };
-            };
-            writeln!(f)?;
+            writeln!(
+                f,
+                "{}|{}",
+                y,
+                (0..8)
+                    .map(|x| if self.squares[(y * 8) + x] {
+                        " X "
+                    } else {
+                        "   "
+                    })
+                    .collect::<Vec<&str>>()
+                    .join("")
+            )?;
         };
-        write!(f, "  ")?;
-        for _x in 0..8 {
-            write!(f, " - ")?;
-        }
-        writeln!(f)?;
-        write!(f, "  ")?;
-        for x in 0..8 {
-            write!(f, " {} ", x)?;
-        }
-        writeln!(f)?;
-        Ok(())
+        writeln!(f, "  {}", (0..8).map(|_x| " - ").collect::<Vec<&str>>().join(""))?;
+        writeln!(f, "  {}", (0..8).map(|x| format!(" {} ", x)).collect::<Vec<String>>().join(""))
     }
 }
 
@@ -95,5 +90,4 @@ mod tests {
         let places = Board::new().place_queens(1, 1);
         assert_eq!(places.collect::<Vec<Vec<usize>>>(), (1..64).map(|square| vec![square]).collect::<Vec<Vec<usize>>>());
     }
-
 }
