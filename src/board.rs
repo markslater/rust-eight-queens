@@ -89,6 +89,12 @@ mod tests {
     }
 
     #[test]
+    fn can_place_one_queen_starting_after_first_square() {
+        let places = Board::new().place_queens(1, 1);
+        assert_eq!(places.collect::<Vec<usize>>(), (1..64).collect::<Vec<usize>>());
+    }
+
+    #[test]
     fn set_rejects_placement_on_same_square_twice() {
         let square = 0;
         let setup = Board::new().set(square).unwrap();
