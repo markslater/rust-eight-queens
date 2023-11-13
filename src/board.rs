@@ -9,14 +9,15 @@ impl Board {
         }
     }
 
-    fn place_queens(&self, start_at: usize, number_to_place: u32) -> impl Iterator<Item = usize> {
+    fn place_queens(&self, start_at: usize, number_to_place: u32) -> impl Iterator<Item = Vec<usize>> {
         match number_to_place {
-            0 => vec![1usize; 0],
+            0 => vec![vec![1usize; 0]; 0],
             _ => (start_at..64)
                 .map(|square| (square, self.set(square)))
                 .filter_map(|(square, result)| result.map(|board| (square, board)).ok())
-                .map(|(square, _)| square)
-                .collect::<Vec<usize>>(),
+                .map(|(square, board)| (square, board.place_queens(square + 1, number_to_place - 1)))
+                .map(|(square, _)|vec![square])
+                .collect::<Vec<Vec<usize>>>(),
         }.into_iter()
     }
 
@@ -83,19 +84,19 @@ mod tests {
     #[test]
     fn can_place_zero_queens() {
         let places = Board::new().place_queens(0, 0);
-        assert_eq!(places.collect::<Vec<usize>>(), vec![]);
+        assert_eq!(places.collect::<Vec<Vec<usize>>>(), vec![vec![]; 0]);
     }
 
     #[test]
     fn can_place_one_queen() {
         let places = Board::new().place_queens(0, 1);
-        assert_eq!(places.collect::<Vec<usize>>(), (0..64).collect::<Vec<usize>>());
+        assert_eq!(places.collect::<Vec<Vec<usize>>>(), (0..64).map(|square| vec![square]).collect::<Vec<Vec<usize>>>());
     }
 
     #[test]
     fn can_place_one_queen_starting_after_first_square() {
         let places = Board::new().place_queens(1, 1);
-        assert_eq!(places.collect::<Vec<usize>>(), (1..64).collect::<Vec<usize>>());
+        assert_eq!(places.collect::<Vec<Vec<usize>>>(), (1..64).map(|square| vec![square]).collect::<Vec<Vec<usize>>>());
     }
 
     #[test]
