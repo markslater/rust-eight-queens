@@ -14,7 +14,7 @@ impl Board {
             0 => vec![1usize; 0],
             _ => (start_at..64)
                 .map(|square| (square, self.set(square)))
-                .filter(|(_, result)| result.is_ok())
+                .filter_map(|(square, result)| result.map(|board| (square, board)).ok())
                 .map(|(square, _)| square)
                 .collect::<Vec<usize>>(),
         }.into_iter()
