@@ -12,7 +12,11 @@ impl Board {
     fn place_queens(&self, start_at: usize, number_to_place: u32) -> impl Iterator<Item = usize> {
         match number_to_place {
             0 => vec![1usize; 0],
-            _ => (start_at..64).filter(|square| !self.squares[*square]).collect::<Vec<usize>>(),
+            _ => (start_at..64)
+                .map(|square| (square, self.set(square)))
+                .filter(|(_, result)| result.is_ok())
+                .map(|(square, _)| square)
+                .collect::<Vec<usize>>(),
         }.into_iter()
     }
 
