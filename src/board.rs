@@ -1,3 +1,6 @@
+use std::fmt;
+use std::fmt::Formatter;
+
 pub struct Board {
     squares: [bool; 64], // TODO could be an unsigned 64 bit integer
 }
@@ -42,29 +45,32 @@ impl Board {
             )
         }
     }
+}
 
-    pub fn output(&self) {
+impl fmt::Display for Board {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         for y in 0..8 {
-            print!("{}|", y);
+            write!(f, "{}|", y)?;
             for x in 0..8 {
                 if self.squares[(y * 8) + x] {
-                    print!(" X ");
+                    write!(f, " X ")?;
                 } else {
-                    print!("   ");
+                    write!(f, "   ")?;
                 };
             };
-            println!();
+            writeln!(f)?;
         };
-        print!("  ");
+        write!(f, "  ")?;
         for _x in 0..8 {
-            print!(" - ");
+            write!(f, " - ")?;
         }
-        println!();
-        print!("  ");
+        writeln!(f)?;
+        write!(f, "  ")?;
         for x in 0..8 {
-            print!(" {} ", x);
+            write!(f, " {} ", x)?;
         }
-        println!();
+        writeln!(f)?;
+        Ok(())
     }
 }
 
