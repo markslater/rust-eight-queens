@@ -43,15 +43,6 @@ impl Board {
         }
     }
 
-    pub fn place_next(&self, start_at: usize) -> Result<(Board, usize), ()> {
-        for i in start_at..64 {
-            if let Ok(board) = self.set(i) {
-                return Ok((board, i));
-            }
-        }
-        Err(())
-    }
-
     pub fn output(&self) {
         for y in 0..8 {
             print!("{}|", y);
@@ -99,10 +90,4 @@ mod tests {
         assert_eq!(places.collect::<Vec<Vec<usize>>>(), (1..64).map(|square| vec![square]).collect::<Vec<Vec<usize>>>());
     }
 
-    #[test]
-    fn set_rejects_placement_on_same_square_twice() {
-        let square = 0;
-        let setup = Board::new().set(square).unwrap();
-        assert!(setup.set(square).is_err())
-    }
 }
