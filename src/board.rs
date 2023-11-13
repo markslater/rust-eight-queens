@@ -11,12 +11,12 @@ impl Board {
 
     fn place_queens(&self, start_at: usize, number_to_place: u32) -> impl Iterator<Item = Vec<usize>> {
         match number_to_place {
-            0 => vec![vec![1usize; 0]; 0],
+            0 => vec![vec![1usize; 0]; 1],
             _ => (start_at..64)
                 .map(|square| (square, self.set(square)))
                 .filter_map(|(square, result)| result.map(|board| (square, board)).ok())
                 .map(|(square, board)| (square, board.place_queens(square + 1, number_to_place - 1)))
-                .map(|(square, _)|vec![square])
+                .flat_map(|(square, results)| results.map(move |result| [vec![square], result].concat()))
                 .collect::<Vec<Vec<usize>>>(),
         }.into_iter()
     }
@@ -84,7 +84,7 @@ mod tests {
     #[test]
     fn can_place_zero_queens() {
         let places = Board::new().place_queens(0, 0);
-        assert_eq!(places.collect::<Vec<Vec<usize>>>(), vec![vec![]; 0]);
+        assert_eq!(places.collect::<Vec<Vec<usize>>>(), vec![vec![]; 1]);
     }
 
     #[test]
