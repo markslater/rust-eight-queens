@@ -76,7 +76,7 @@ mod tests {
     #[test]
     fn can_place_zero_queens() {
         let places = Board::new().place_queens(0, 0);
-        assert_eq!(places.collect::<Vec<Vec<usize>>>(), vec![vec![]; 1]);
+        assert_eq!(places.collect::<Vec<Vec<usize>>>(), [[]]);
     }
 
     #[test]
