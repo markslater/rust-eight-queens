@@ -30,19 +30,13 @@ impl Board {
         } else {
             let mut squares = self.squares;
             for i in square..64 {
-                if (i % 8 == square % 8)
+                squares[i] = squares[i]
+                    || (i % 8 == square % 8)
                     || (i / 8 == square / 8)
                     || ((i - square) % 9 == 0 && i % 8 >= square % 8)
-                    || ((i - square) % 7 == 0 && i % 8 <= square % 8)
-                {
-                    squares[i] = true;
-                }
+                    || ((i - square) % 7 == 0 && i % 8 <= square % 8);
             }
-            Ok(
-                Board {
-                    squares
-                }
-            )
+            Ok(Board { squares })
         }
     }
 }
