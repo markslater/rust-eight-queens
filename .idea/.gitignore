@@ -6,3 +6,6 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+/eight_queens.iml
+/modules.xml
+/vcs.xml
