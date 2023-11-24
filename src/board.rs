@@ -1,15 +1,11 @@
 use std::fmt;
 use std::fmt::Formatter;
 
-pub struct Board {
-    squares: [bool; 64], // TODO could be an unsigned 64 bit integer
-}
+pub struct Board([bool; 64]); // TODO could be an unsigned 64 bit integer
 
 impl Board {
     pub fn new() -> Board {
-        Board {
-            squares: [false; 64]
-        }
+        Board([false; 64])
     }
 
     pub fn place_queens(&self, start_at: usize, number_to_place: u32) -> impl Iterator<Item=Vec<usize>> {
@@ -25,10 +21,10 @@ impl Board {
     }
 
     fn set(&self, square: usize) -> Result<Board, ()> { // TODO should we use a smaller argument?  Does it matter?
-        if self.squares[square] { // TODO should we improve error when index is out of bounds?
+        if self.0[square] { // TODO should we improve error when index is out of bounds?
             Err(())
         } else {
-            let mut squares = self.squares;
+            let mut squares = self.0;
             for i in square..64 {
                 squares[i] = squares[i]
                     || (i % 8 == square % 8)
@@ -36,7 +32,7 @@ impl Board {
                     || ((i - square) % 9 == 0 && i % 8 >= square % 8)
                     || ((i - square) % 7 == 0 && i % 8 <= square % 8);
             }
-            Ok(Board { squares })
+            Ok(Board(squares))
         }
     }
 }
@@ -49,7 +45,7 @@ impl fmt::Display for Board {
                 "{}|{}",
                 y,
                 (0..8)
-                    .map(|x| if self.squares[(y * 8) + x] {
+                    .map(|x| if self.0[(y * 8) + x] {
                         " X "
                     } else {
                         "   "
