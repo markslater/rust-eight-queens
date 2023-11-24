@@ -1,11 +1,11 @@
 use std::fmt;
 use std::fmt::Formatter;
 
-pub struct Board([bool; 64]); // TODO could be an unsigned 64 bit integer
+pub struct Board(u64);
 
 impl Board {
     pub fn new() -> Board {
-        Board([false; 64])
+        Board(0)
     }
 
     pub fn place_queens(&self, start_at: usize, number_to_place: u32) -> impl Iterator<Item=Vec<usize>> {
@@ -21,17 +21,14 @@ impl Board {
     }
 
     fn set(&self, square: usize) -> Result<Board, ()> { // TODO should we use a smaller argument?  Does it matter?
-        if self.0[square] { // TODO should we improve error when index is out of bounds?
+        if ((self.0 >> square) & 1) != 0 { // TODO should we improve error when index is out of bounds?
             Err(())
         } else {
             let mut squares = self.0;
-            for i in square..64 {
-                squares[i] = squares[i]
-                    || (i % 8 == square % 8)
-                    || (i / 8 == square / 8)
-                    || ((i - square) % 9 == 0 && i % 8 >= square % 8)
-                    || ((i - square) % 7 == 0 && i % 8 <= square % 8);
-            }
+            squares |= 0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_11111111 << (8 * (square / 8));
+            squares |= 0b00000001_00000001_00000001_00000001_00000001_00000001_00000001_00000001 << square % 8;
+            squares |= 0b10000000_01000000_00100000_00010000_00001000_00000100_00000010_00000001 << (8 * (square % 8)) >> (8 * (square % 8)) << square;
+            squares |= 0b00000000_00000010_00000100_00001000_00010000_00100000_01000000_10000001 << (63 - 8 * (square % 8)) >> (63 - 8 * (square % 8)) << square;
             Ok(Board(squares))
         }
     }
@@ -45,7 +42,7 @@ impl fmt::Display for Board {
                 "{}|{}",
                 y,
                 (0..8)
-                    .map(|x| if self.0[(y * 8) + x] {
+                    .map(|x| if ((self.0 >> ((y * 8) + x)) & 1) == 1 {
                         " X "
                     } else {
                         "   "
@@ -79,5 +76,25 @@ mod tests {
     fn can_place_one_queen_starting_after_first_square() {
         let places = Board::new().place_queens(1, 1);
         assert_eq!(places.collect::<Vec<Vec<usize>>>(), (1..64).map(|square| vec![square]).collect::<Vec<Vec<usize>>>());
+    }
+
+    #[test]
+    fn can_set_square_0() {
+        assert_eq!(Board::new().set(0).unwrap().0, 9313761861428380671)
+    }
+
+    #[test]
+    fn can_set_square_7() {
+        assert_eq!(Board::new().set(7).unwrap().0, 9332167099941961983)
+    }
+
+    #[test]
+    fn can_set_square_56() {
+        assert_eq!(Board::new().set(56).unwrap().0, 18374969058471772417)
+    }
+
+    #[test]
+    fn can_set_square_63() {
+        assert_eq!(Board::new().set(63).unwrap().0, 18410856566090662016)
     }
 }
